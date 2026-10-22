@@ -1,0 +1,25 @@
+# Python and local development
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
+*.log
+*.zip
+.env
+.env.*
+
+# Never commit personal locations, pairing material, or control keys
+access-token
+place.json
+places.json
+session.json
+*.lock
+*.pem
+*.key
+pairing_records/
+data/

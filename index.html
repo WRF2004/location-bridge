@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#f4f5f0"><title>位置遥控 v0.2.0 · Location Bridge</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<header><div class="brand"><span class="logo">⌖</span><div>位置遥控<small>LOCATION BRIDGE · 0.2.0</small></div></div><span class="local">本地连接</span></header>
+<main>
+<section class="intro"><p class="eyebrow">MAC × IPHONE</p><h1>电脑负责连接。<br>手机轻点一下。</h1><p>收藏多个地点，轻点切换，手动开关。</p></section>
+<div class="grid"><div>
+<section class="card status-card"><div class="row"><span class="eyebrow">设备状态</span><span id="badge" class="badge">等待连接</span></div><h2 id="device">连接你的 iPhone</h2><p id="message" role="status" aria-live="polite">正在连接 Mac…</p><div id="timer" hidden></div><button class="quiet" data-action="check">检查连接 ↗</button></section>
+<section class="card place-card">
+<div class="row"><span class="eyebrow">当前地点</span><span class="manual-tag">手动控制</span></div>
+<h2 id="place-name">尚未保存地点</h2><p id="coordinates">添加地点后即可使用</p>
+<button id="toggle" class="location-toggle" role="switch" aria-checked="false" disabled><span><strong id="toggle-label">开启模拟定位</strong><small id="toggle-hint">使用上方地点，或点击下方卡片</small></span><span class="switch-track" aria-hidden="true"><span></span></span></button>
+<p class="fine">开启后不再计时关闭。Mac 后台需保持运行；关闭网页不会退出后台。</p>
+<div class="row places-heading"><span class="eyebrow">我的地点</span><button class="text-button" id="add-place">＋ 添加地点</button></div>
+<div id="places-list" aria-label="保存的地点"></div><p id="places-empty" class="fine">还没有地点。先添加一个，以后点卡片即可使用。</p>
+</section>
+<section class="card flow"><span class="eyebrow">日常使用 · 三步</span><div class="steps"><p><b>01</b> 点地点卡片开启或切换</p><p><b>02</b> 按需使用手机上的应用</p><p><b>03</b> 用完关闭模拟定位开关</p></div><p class="fine">本工具只控制设备模拟定位，其他应用的操作由你手动完成。</p></section>
+</div><aside>
+<details class="card" id="setup"><summary>首次连接设置 <span>＋</span></summary><div class="details-body"><p class="fine">首次用 USB 连接并解锁 iPhone，选择「信任此电脑」。Mac 保持开机、工具保持运行。</p><div class="setup-step"><b>1. 检查连接</b><p>确认页面能显示你的 iPhone。</p><button class="secondary" data-action="check">检查连接</button></div><div class="setup-step"><b>2. 开启开发者模式</b><p>先点下面按钮显示开关，再退出并重新打开 iPhone 设置 → 隐私与安全性，滑到底部开启开发者模式。按手机提示重启并确认；保留锁屏密码即可。</p><button class="secondary" data-action="developer">显示手机上的开发者模式开关</button></div><div class="setup-step"><b>3. 准备设备</b><p>首次可能下载开发者映像，需要几分钟。</p><button class="secondary" data-action="prepare">准备设备</button></div><div class="setup-step"><b>4. 可选：启用无线连接</b><p>首次仍需数据线。开启后拔线并检查连接；仅同一局域网，若连接失败请继续用 USB。</p><button class="secondary" data-action="wifi">启用无线连接</button></div></div></details>
+<details class="card" id="place-editor"><summary><span id="editor-title">添加地点</span> <span>＋</span></summary><div class="details-body"><p class="fine">地图初始视野仅供浏览，<strong>不会自动用作目标地点</strong>。拖动地图，让中心点对准目标建筑，再保存。地图使用 WGS84。</p><div id="map" role="img" aria-label="拖动地图选择位置"><div id="tiles"></div><div class="crosshair"></div><div id="map-note">正在加载地图…</div><div class="map-controls"><button type="button" id="zoom-in" aria-label="放大地图">＋</button><button type="button" id="zoom-out" aria-label="缩小地图">−</button></div><a class="attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a></div><p class="fine">地图无法加载时，可填写已核实的 WGS84 经纬度。不要直接混用高德/腾讯的 GCJ-02 或百度坐标。</p><form id="place-form"><label>地点名称<input id="name" maxlength="80" placeholder="例如：学校、家、旅行地点" required></label><div class="fields"><label>纬度<input id="lat" type="number" step="any" min="-90" max="90" placeholder="例如 39.xxxxxx" required></label><label>经度<input id="lon" type="number" step="any" min="-180" max="180" placeholder="例如 116.xxxxxx" required></label></div><label class="checkbox"><input type="checkbox" id="confirm-place" required><span>我已核对地图中的目标位置</span></label><button class="secondary" type="submit">保存地点</button><button class="quiet" id="cancel-edit" type="button">取消编辑</button></form></div></details>
+<details class="card" id="pairing"><summary>在手机上打开 <span>＋</span></summary><div class="details-body"><p class="fine">手机和 Mac 连接同一可信 Wi-Fi，使用相机扫描二维码，在 Safari 打开。可收藏页面方便下次访问。</p><img id="qr" alt="手机连接二维码" width="220" height="220"><button id="copy-link" class="secondary">复制手机控制页链接</button><p class="fine">此链接包含你的控制钥匙，请勿分享。校园网若隔离设备，请用私人路由器或手机热点连接 Mac。</p></div></details>
+<section class="card exit-card"><span class="eyebrow">结束使用</span><p class="fine">恢复真实定位后关闭 Mac 后台。也可在终端按 Control + C 退出。恢复失败时会保留页面，方便重试。</p><button class="secondary" id="quit" data-action="shutdown">恢复并退出程序</button><p class="fine">电脑断电或手机断连时无法保证恢复；重新连接后点恢复，并检查手机地图。</p></section>
+<details class="card" id="diagnostics"><summary>诊断信息 <span>＋</span></summary><div class="details-body"><p class="fine">报错时可截取这里发给开发者。不要发送二维码或配对文件。</p><pre id="logs">暂无记录</pre></div></details>
+</aside></div><footer>本地运行 · 修改设备定位，不改变 IP</footer>
+</main><div id="toast" role="alert" hidden></div><dialog id="login"><h2>连接到 Mac</h2><p>请扫描 Mac 页面上的二维码，或在此粘贴完整控制页链接。</p><form id="login-form"><input id="access" type="password" autocomplete="off" placeholder="粘贴完整链接或连接码" required><button class="primary" type="submit">连接</button></form></dialog>
+</body></html>

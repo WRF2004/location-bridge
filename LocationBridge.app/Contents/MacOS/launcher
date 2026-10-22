@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+PACKAGE_DIR="$(cd -- "$(dirname -- "$0")/../../.." && pwd)"
+exec /usr/bin/open -a Terminal "$PACKAGE_DIR/Start.command"
